@@ -9,6 +9,13 @@ export default class TopicList extends Component {
     this.state = {};
   }
 
+  bootstrap () {
+    return new Promise((resolve) => {
+      this.props.appState.count = 3;
+      resolve(true);
+    });
+  }
+
   handleClick1 () {
     axios.get('http://localhost:3333/api/v1/topics')
       .then((res) => {

@@ -4,6 +4,7 @@ const MemoryFs = require('memory-fs');
 const path = require('path');
 const ReactSSR = require('react-dom/server');
 const proxy = require('koa-proxies');
+const bootstrapper = require('react-async-bootstrapper');
 const serverConfig = require('../../build/webpack.server.conf');
 
 // 获取模板文件
@@ -70,17 +71,23 @@ module.exports = (app, router) => {
   template.then((res) => {
     router.get('*', async (ctx, next) => {
       const routerContext = {};
-      const appTemplate = serverBundle(createStoreMap(), routerContext, ctx.url);
-      const appString = ReactSSR.renderToString(appTemplate);
-      // 以下代码需要放在renderToString之后
-      // 当路由中有redirect的情况
-      // If we find a context.url, then we know the app redirected
-      if (routerContext.url) {
-        // ctx.status = 302;
-        ctx.redirect(routerContext.url);
-        return;
-      }
-      ctx.body = res.replace('<!-- app -->', appString);
+      const stores = createStoreMap();
+      const appTemplate = serverBundle(stores, routerContext, ctx.url);
+      await bootstrapper(appTemplate)
+        .then(() => {
+          const appString = ReactSSR.renderToString(appTemplate);
+
+          // 当路由中有redirect的情况
+          // If we find a context.url, then we know the app redirected
+          if (routerContext.url) {
+            // ctx.status = 302;
+            ctx.redirect(routerContext.url);
+            return;
+          }
+          console.log('stores', stores);
+
+          ctx.body = res.replace('<!-- app -->', appString);
+        });
     });
   });
   // app.use(router.routes());
