@@ -10,8 +10,9 @@ export default class TopicList extends Component {
   }
 
   bootstrap () {
+    // 做数据的初始化
     return new Promise((resolve) => {
-      this.props.appState.count = 3;
+      this.props.appState.count = 4;
       resolve(true);
     });
   }

@@ -26,15 +26,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
     libraryTarget: 'commonjs2'
   },
+  externals: Object.keys(require('../package.json').dependencies),
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
   devtool: config.dev.devtool,
   plugins: [
-    // 允许创建一个在编译时可以配置的全局常量
-    // new webpack.DefinePlugin({
-    //   'process.env': require('../config/dev.env')
-    // }),
     new webpack.NoEmitOnErrorsPlugin(),
   ]
 });

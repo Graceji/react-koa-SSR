@@ -5,16 +5,26 @@ const path = require('path');
 const ReactSSR = require('react-dom/server');
 const proxy = require('koa-proxies');
 const bootstrapper = require('react-async-bootstrapper');
+const ejs = require('ejs');
+const serialize = require('serialize-javascript');
 const serverConfig = require('../../build/webpack.server.conf');
 
 // 获取模板文件
 const getTemplate = () => {
-  return axios.get('http://0.0.0.0:8080/public/app.html')
+  return axios.get('http://0.0.0.0:8080/public/server.ejs')
     .then((res) => res.data)
     .catch((err) => {
       console.log(err);
     });
 };
+
+// 获取state
+const getStoreState = (stores) => {
+  return Object.keys(stores).reduce((result, storeName) => {
+    result[storeName] = stores[storeName].toJson();
+    return result;
+  }, {});
+}
 
 // 将string转为模块使用
 const Module = module.constructor;
@@ -51,6 +61,7 @@ serverCompiler.watch({}, (err, stats) => {
   // 从内存中读取server bundle
   const bundle = mfs.readFileSync(bundlePath, 'utf-8');
   const m = new Module();
+  // 使用这种方式打包的模块无法使用require模式
   m._compile(bundle, 'server-entry.js');
   serverBundle = m.exports.default;
   createStoreMap = m.exports.createStoreMap;
@@ -84,9 +95,15 @@ module.exports = (app, router) => {
             ctx.redirect(routerContext.url);
             return;
           }
-          console.log('stores', stores);
 
-          ctx.body = res.replace('<!-- app -->', appString);
+          const state = getStoreState(stores);
+
+          // 将数据插入到html中，完成client端数据的同步
+          const html = ejs.render(res, {
+            initialState: serialize(state),
+            appString,
+          });
+          ctx.body = html;
         });
     });
   });
