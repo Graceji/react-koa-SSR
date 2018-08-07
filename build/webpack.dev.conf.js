@@ -67,7 +67,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'server.ejs',
       template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
-    })
+    }),
   ]
 });
 

@@ -2,12 +2,10 @@ const axios = require('axios');
 const webpack = require('webpack');
 const MemoryFs = require('memory-fs');
 const path = require('path');
-const ReactSSR = require('react-dom/server');
 const proxy = require('koa-proxies');
 const bootstrapper = require('react-async-bootstrapper');
-const ejs = require('ejs');
-const serialize = require('serialize-javascript');
 const serverConfig = require('../../build/webpack.server.conf');
+const serverRender = require('./server-render');
 
 // 获取模板文件
 const getTemplate = () => {
@@ -17,14 +15,6 @@ const getTemplate = () => {
       console.log(err);
     });
 };
-
-// 获取state
-const getStoreState = (stores) => {
-  return Object.keys(stores).reduce((result, storeName) => {
-    result[storeName] = stores[storeName].toJson();
-    return result;
-  }, {});
-}
 
 const NativeModule = require('module');
 const vm = require('vm');
@@ -63,7 +53,7 @@ serverCompiler.outputFileSystem = mfs;
 // 调用 watch 方法会触发 webpack 执行器，但之后会监听变更（很像 CLI 命令: webpack--watch）
 // 一旦 webpack 检测到文件变更，就会重新执行编译。该方法返回一个 Watching 实例。
 let serverBundle;
-let createStoreMap;
+// let createStoreMap;
 serverCompiler.watch({}, (err, stats) => {
   // 可以通过stats获取到代码编译过程中的有用信息，包括：
   // 1. 错误和警告（如果有的话）
@@ -87,8 +77,9 @@ serverCompiler.watch({}, (err, stats) => {
   // const m = new Module();
   // m._compile(bundle, 'server-entry.js');
   const m = getModuleFromString(bundle, 'server-entry.js');
-  serverBundle = m.exports.default;
-  createStoreMap = m.exports.createStoreMap;
+  // serverBundle = m.exports.default;
+  serverBundle = m.exports;  
+  // createStoreMap = m.exports.createStoreMap;
 });
 
 module.exports = (app, router) => {
@@ -105,31 +96,11 @@ module.exports = (app, router) => {
   const template = getTemplate();
   template.then((res) => {
     router.get('*', async (ctx, next) => {
-      const routerContext = {};
-      const stores = createStoreMap();
-      const appTemplate = serverBundle(stores, routerContext, ctx.url);
-      await bootstrapper(appTemplate)
-        .then(() => {
-          const appString = ReactSSR.renderToString(appTemplate);
-
-          // 当路由中有redirect的情况
-          // If we find a context.url, then we know the app redirected
-          if (routerContext.url) {
-            // ctx.status = 302;
-            ctx.redirect(routerContext.url);
-            return;
-          }
-
-          const state = getStoreState(stores);
-
-          // 将数据插入到html中，完成client端数据的同步
-          const html = ejs.render(res, {
-            initialState: serialize(state),
-            appString,
-          });
-          ctx.body = html;
-        });
+      if (!serverBundle) {
+        ctx.body = 'waiting for compile';
+        return;
+      }
+      await serverRender(ctx, next, serverBundle, res);
     });
   });
-  // app.use(router.routes());
 };

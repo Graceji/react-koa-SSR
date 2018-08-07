@@ -11,6 +11,7 @@ const ReactSSR = require('react-dom/server');
 const loginRouter = require('./util/handle-login');
 const proxy = require('./util/proxy');
 const handleResponse = require('./middlewares/handle-response');
+const serverRender = require('./util/server-render');
 
 const app = new Koa();
 app.keys = ['koa ssr demo'];
@@ -40,13 +41,14 @@ if (process.env.NODE_ENV === 'development') {
   const devStatic = require('./util/dev-static');
   devStatic(app, router);
 } else {
-  const serverEntry = require('../dist/static/js/server-entry');
-  const template = fs.readFileSync(path.resolve(__dirname, '../dist/app.html'), 'utf-8');
+  const serverEntry = require('../dist/server-entry');
+  const template = fs.readFileSync(path.resolve(__dirname, '../dist/server.ejs'), 'utf-8');
   app.use(serve(path.join(__dirname, '../dist')));
 
   router.get('*', async (ctx, next) => {
-    const appString = ReactSSR.renderToString(serverEntry.default);
-    ctx.body = template.replace('<!-- app -->', appString);
+    // const appString = ReactSSR.renderToString(serverEntry.default);
+    // ctx.body = template.replace('<!-- app -->', appString);
+    await serverRender(ctx, next, serverEntry, template);
   });
 }
 

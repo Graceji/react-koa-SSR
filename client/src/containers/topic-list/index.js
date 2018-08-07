@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { observer, inject, propTypes } from 'mobx-react';
+import { Helmet } from 'react-helmet';
 
 @inject('appState') @observer
 export default class TopicList extends Component {
@@ -64,6 +65,12 @@ export default class TopicList extends Component {
   render () {
     return (
       <div>
+        <Helmet>
+          <title>
+            This is Topic List
+          </title>
+          <meta name="decription" content="This is Description" />
+        </Helmet>
         topic-detail
         <button onClick={() => this.handleClick1()} type="button">
           请求topics

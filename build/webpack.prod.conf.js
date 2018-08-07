@@ -100,7 +100,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       templateParameters: {
         production: true,
       },
-      template: 'index.ejs',
+      template: path.join(__dirname, '../client/index.html'),
       inject: 'body',
       minify: {
         removeComments: true,
@@ -108,6 +108,10 @@ const webpackConfig = merge(baseWebpackConfig, {
         removeAttributeQuotes: true
       },
       chunksSortMode: 'dependency'
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'server.ejs',
+      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin
