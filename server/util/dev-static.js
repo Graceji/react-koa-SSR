@@ -26,8 +26,31 @@ const getStoreState = (stores) => {
   }, {});
 }
 
+const NativeModule = require('module');
+const vm = require('vm');
+
+// 将string解析为一个模块
+const getModuleFromString = (bundle, filename) => {
+  const m = { exports: {} };
+  // 模块包装器
+  // 在执行模块代码之前，Node.js 会使用一个如下的函数包装器将其包装：
+  // (function (exports, require, module, __filename, __dirname) {
+  //   // 模块的代码实际上在这里, bundle code
+  // });
+  const wrapper = NativeModule.wrap(bundle);
+  // vm.Script类型的实例包含若干预编译的脚本，这些脚本能够在特定的沙箱（或者上下文）中被运行。
+  // 创建一个新的vm.Script对象只编译代码但不会执行它。编译过的vm.Script此后可以被多次执行
+  const script = new vm.Script(wrapper, {
+    filename,
+    displayErrors: true,
+  });
+  const result = script.runInThisContext();
+  result.call(m.exports, m.exports, require, m);
+  return m;
+}
+
 // 将string转为模块使用
-const Module = module.constructor;
+// const Module = module.constructor;
 
 const mfs = new MemoryFs();
 const serverCompiler = webpack(serverConfig);
@@ -60,9 +83,10 @@ serverCompiler.watch({}, (err, stats) => {
   const bundlePath = path.join(serverConfig.output.path, serverConfig.output.filename);
   // 从内存中读取server bundle
   const bundle = mfs.readFileSync(bundlePath, 'utf-8');
-  const m = new Module();
   // 使用这种方式打包的模块无法使用require模式
-  m._compile(bundle, 'server-entry.js');
+  // const m = new Module();
+  // m._compile(bundle, 'server-entry.js');
+  const m = getModuleFromString(bundle, 'server-entry.js');
   serverBundle = m.exports.default;
   createStoreMap = m.exports.createStoreMap;
 });
