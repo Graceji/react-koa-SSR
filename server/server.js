@@ -6,7 +6,6 @@ const serve = require('koa-static');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const cors = require('koa2-cors');
-// const views = require('koa-views');
 const ReactSSR = require('react-dom/server');
 const loginRouter = require('./util/handle-login');
 const proxy = require('./util/proxy');

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { observer, inject, propTypes } from 'mobx-react';
 import { Helmet } from 'react-helmet';
+import Button from '@material-ui/core/Button';
 
 @inject('appState') @observer
 export default class TopicList extends Component {
@@ -87,6 +88,9 @@ export default class TopicList extends Component {
         <span>
           {this.props.appState.msg}
         </span>
+        <Button variant="raised" color="primary">
+          Primary
+        </Button>
       </div>
     );
   }

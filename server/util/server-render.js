@@ -3,6 +3,11 @@ const ReactSSR = require('react-dom/server');
 const Helmet = require('react-helmet').default;
 const ejs = require('ejs');
 const serialize = require('serialize-javascript');
+const createMuiTheme = require('@material-ui/core/styles').createMuiTheme;
+const createGenerateClassName = require('@material-ui/core/styles').createGenerateClassName
+const lightBlue = require('@material-ui/core/colors').lightBlue;
+const pink = require('@material-ui/core/colors').pink;
+const SheetsRegistry = require('react-jss').SheetsRegistry;
 
 // 获取state
 const getStoreState = (stores) => {
@@ -16,8 +21,25 @@ module.exports = async (ctx, next, bundle, template) => {
   const routerContext = {};
   const createStoreMap = bundle.createStoreMap
   const stores = createStoreMap();
+  const sheetsRegistry = new SheetsRegistry();
+  // Create a theme instance.
+  const theme = createMuiTheme({
+    palette: {
+      primary: lightBlue,
+      accent: pink,
+      type: 'light',
+    },
+  });
+  const generateClassName = createGenerateClassName();
   const createApp = bundle.default;
-  const appTemplate = createApp(stores, routerContext, ctx.url);
+  const appTemplate = createApp(
+    stores,
+    routerContext,
+    ctx.url,
+    sheetsRegistry,
+    generateClassName,
+    theme
+  );
 
   await bootstrapper(appTemplate)
     .then(() => {
@@ -43,6 +65,7 @@ module.exports = async (ctx, next, bundle, template) => {
         meta: helmet.meta.toString(),
         link: helmet.link.toString(),
         style: helmet.style.toString(),
+        materialCss: sheetsRegistry.toString(),
       });
       ctx.body = html;
     })
