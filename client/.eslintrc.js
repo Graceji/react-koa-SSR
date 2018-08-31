@@ -22,6 +22,7 @@ module.exports = {
     'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }],
     'react/no-array-index-key': [0],
     'react/destructuring-assignment': [0],
+    'react/forbid-prop-types': [0],
     'comma-dangle': ['error', {
       'arrays': 'always-multiline',
       'objects': 'always-multiline',
@@ -37,5 +38,7 @@ module.exports = {
     'no-console': [0],
     'no-bitwise': [0], // 可以使用~
     'no-mixed-operators': [0],
+    'no-param-reassign': [0],
+    'prefer-promise-reject-errors': [0],
   }
 }

@@ -1,14 +1,32 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { observer, inject, propTypes } from 'mobx-react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import Button from '@material-ui/core/Button';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import List from '@material-ui/core/List';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ContentWrap from '../../components/common/ContentWrap';
+import TopicListItem from './ListItem';
+import { tabs } from '../../utils/variable-define';
 
-@inject('appState') @observer
+@inject(stores => ({
+  appState: stores.appState,
+  topicStore: stores.topicStore,
+})) @observer
 export default class TopicList extends Component {
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = {
+      tabValue: 'all',
+    };
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.listItemClick = this.listItemClick.bind(this);
+  }
+
+  componentDidMount () {
+    // 获取数据
+    this.props.topicStore.fetchTopics('all');
   }
 
   bootstrap () {
@@ -19,83 +37,67 @@ export default class TopicList extends Component {
     });
   }
 
-  handleClick1 () {
-    axios.get('http://localhost:3333/api/v1/topics')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  handleTabChange (e, value) {
+    const { history } = this.props;
+    this.setState({
+      tabValue: value,
+    });
+
+    history.push({
+      pathname: '/list',
+      search: `?tab=${value}`,
+    });
+    this.props.topicStore.fetchTopics(value);
   }
 
-  handleClick2 () {
-    axios({
-      url: 'http://localhost:3333/api/user/login',
-      method: 'post',
-      data: {
-        accessToken: 'db7fda3e-2589-4cba-a2c0-218681b665f6',
-      },
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  listItemClick () {
 
-  handleClick3 () {
-    axios({
-      url: 'http://localhost:3333/api/v1/message/mark_all',
-      method: 'post',
-      withCredentials: true,
-      params: {
-        needAccessToken: true,
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }
 
   render () {
     return (
-      <div>
+      <ContentWrap>
         <Helmet>
           <title>
             This is Topic List
           </title>
           <meta name="decription" content="This is Description" />
         </Helmet>
-        topic-detail
-        <button onClick={() => this.handleClick1()} type="button">
-          请求topics
-        </button>
-        <br />
-        <button onClick={() => this.handleClick2()} type="button">
-          登录
-        </button>
-        <br />
-        <button onClick={() => this.handleClick3()} type="button">
-          mark All
-        </button>
-        <br />
-        <span>
-          {this.props.appState.msg}
-        </span>
-        <Button variant="raised" color="primary">
-          Primary
-        </Button>
-      </div>
+        <Tabs onChange={this.handleTabChange} value={this.state.tabValue}>
+          {
+            Object.keys(tabs).map(key => (
+              <Tab
+                key={key}
+                label={tabs[key]}
+                value={key}
+              />
+            ))
+          }
+        </Tabs>
+        {
+          this.props.topicStore.syncing
+            ? <CircularProgress color="secondary" size={100} />
+            : (
+              <List>
+                {
+                  this.props.topicStore.topics.map(topic => (
+                    <TopicListItem
+                      key={topic.id}
+                      onClick={this.listItemClick}
+                      topic={topic}
+                    />
+                  ))
+                }
+              </List>
+            )
+        }
+      </ContentWrap>
     );
   }
 }
 
 TopicList.propTypes = {
   appState: propTypes.objectOrObservableObject,
+  topicStore: propTypes.objectOrObservableObject,
+  // history: P
 };

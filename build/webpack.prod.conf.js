@@ -11,7 +11,7 @@ const utils = require('./utils');
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
 
-const env = require('../config/prod.env');
+// const env = require('../config/prod.env');
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',

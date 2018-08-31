@@ -45,14 +45,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
-      poll: config.dev.port
+      poll: config.dev.poll
     }
   },
   plugins: [
     // 允许创建一个在编译时可以配置的全局常量
-    new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env': require('../config/dev.env')
+    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
