@@ -18,7 +18,7 @@ export const topicPrimaryStyle = theme => ({
   },
   topTab: {
     backgroundColor: theme.palette.secondary[500],
-  }
+  },
 });
 
 export const topicSecondaryStyle = theme => ({

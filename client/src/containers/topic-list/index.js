@@ -50,8 +50,9 @@ export default class TopicList extends Component {
     this.props.topicStore.fetchTopics(value);
   }
 
-  listItemClick () {
-
+  // 列表项点击事件
+  listItemClick (id) {
+    this.props.history.push(`/detail/${id}`);
   }
 
   render () {
@@ -59,7 +60,7 @@ export default class TopicList extends Component {
       <ContentWrap>
         <Helmet>
           <title>
-            This is Topic List
+            列表页
           </title>
           <meta name="decription" content="This is Description" />
         </Helmet>
@@ -83,7 +84,7 @@ export default class TopicList extends Component {
                   this.props.topicStore.topics.map(topic => (
                     <TopicListItem
                       key={topic.id}
-                      onClick={this.listItemClick}
+                      onClick={() => this.listItemClick(topic.id)}
                       topic={topic}
                     />
                   ))
@@ -99,5 +100,5 @@ export default class TopicList extends Component {
 TopicList.propTypes = {
   appState: propTypes.objectOrObservableObject,
   topicStore: propTypes.objectOrObservableObject,
-  // history: P
+  history: PropTypes.object,
 };

@@ -1,4 +1,5 @@
 // 有需要再补充
+
 module.exports = {
   root: true,
   parser: 'babel-eslint',
@@ -40,5 +41,8 @@ module.exports = {
     'no-mixed-operators': [0],
     'no-param-reassign': [0],
     'prefer-promise-reject-errors': [0],
+    'lines-between-class-members': [0],
+    'react/no-danger': [0],
+    'consistent-return': [0],
   }
 }

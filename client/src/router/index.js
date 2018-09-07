@@ -25,6 +25,6 @@ export default () => (
   <React.Fragment>
     <Route path="/" exact render={() => <Redirect to="/list" />} />
     <Route path="/list" component={TopicList} />
-    <Route path="/detail" component={TopicDetail} />
+    <Route path="/detail/:id" component={TopicDetail} />
   </React.Fragment>
 );
