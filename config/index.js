@@ -34,7 +34,7 @@ module.exports = {
     cssSourceMap: true
   },
   build: {
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../dist/app.html'),
     // Paths
     assetsPublicPath: '/public/',
     assetsSubDirectory: 'static',

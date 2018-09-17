@@ -49,10 +49,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    // 允许创建一个在编译时可以配置的全局常量
-    // new webpack.DefinePlugin({
-    //   'process.env': require('../config/dev.env')
-    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
@@ -64,10 +60,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: path.join(__dirname, '../client/index.html'),
       inject: true
     }),
-    new HtmlWebpackPlugin({
-      filename: 'server.ejs',
-      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'server.ejs',
+    //   template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+    // }),
   ]
 });
 

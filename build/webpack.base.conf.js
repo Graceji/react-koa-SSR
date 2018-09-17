@@ -20,12 +20,6 @@ module.exports = {
   entry: {
     app: path.join(__dirname, '../client/main.js')
   },
-  // output: {
-  //   path: config.build.assetsRoot,
-  //   filename: utils.assetsPath('js/[name].[hash].js'),
-  //   chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
-  //   publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
-  // },
   resolve: {
     extensions: ['.js', '.json', '.jsx', '.less']
   },

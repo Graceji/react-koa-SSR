@@ -9,7 +9,7 @@ import ContentWrap from '../../components/common/ContentWrap';
   fetchTopicDetail: stores.topicStore.fetchTopicDetail,
   detailMap: stores.topicStore.detailMap,
 })) @observer
-export default class TopicDetail extends Component {
+class TopicDetail extends Component {
   constructor (props) {
     super(props);
     this.state = {};
@@ -66,3 +66,5 @@ TopicDetail.propTypes = {
   fetchTopicDetail: PropTypes.func,
   match: PropTypes.object,
 };
+
+export default TopicDetail;

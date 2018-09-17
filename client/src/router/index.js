@@ -18,6 +18,7 @@ import { Route, Redirect } from 'react-router-dom';
 //   loading: Loading,
 // });
 
+import Login from '../containers/user/login';
 import TopicList from '../containers/topic-list';
 import TopicDetail from '../containers/topic-detail';
 
@@ -26,5 +27,6 @@ export default () => (
     <Route path="/" exact render={() => <Redirect to="/list" />} />
     <Route path="/list" component={TopicList} />
     <Route path="/detail/:id" component={TopicDetail} />
+    <Route path="/login" component={Login} />
   </React.Fragment>
 );

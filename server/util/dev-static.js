@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const MemoryFs = require('memory-fs');
 const path = require('path');
 const proxy = require('koa-proxies');
-const bootstrapper = require('react-async-bootstrapper');
+// const bootstrapper = require('react-async-bootstrapper');
 const serverConfig = require('../../build/webpack.server.conf');
 const serverRender = require('./server-render');
 
@@ -44,6 +44,7 @@ const getModuleFromString = (bundle, filename) => {
 
 const mfs = new MemoryFs();
 const serverCompiler = webpack(serverConfig);
+// 自定义文件系统
 // 默认情况下，webpack 使用普通文件系统来读取文件并将文件写入磁盘。
 // 但是，还可以使用不同类型的文件系统（内存(memory), webDAV 等）来更改输入或输出行为。
 // 为了实现这一点，可以改变 inputFileSystem 或 outputFileSystem。
@@ -72,6 +73,7 @@ serverCompiler.watch({}, (err, stats) => {
 
   const bundlePath = path.join(serverConfig.output.path, serverConfig.output.filename);
   // 从内存中读取server bundle
+  // 读出的bundle是为string类型，并不是js中可以使用的模块
   const bundle = mfs.readFileSync(bundlePath, 'utf-8');
   // 使用这种方式打包的模块无法使用require模式
   // const m = new Module();

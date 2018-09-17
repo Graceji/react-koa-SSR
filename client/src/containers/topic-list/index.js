@@ -14,7 +14,7 @@ import { tabs } from '../../utils/variable-define';
   appState: stores.appState,
   topicStore: stores.topicStore,
 })) @observer
-export default class TopicList extends Component {
+class TopicList extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -31,8 +31,13 @@ export default class TopicList extends Component {
 
   bootstrap () {
     // 做数据的初始化
+    // 可以异步的操作数据
+    // 服务端渲染时，执行bootstrapper()方法(server-render.js中))时，就会来执行组件中此方法，
+    // 组件中此方法执行结束后，才会继续渲染工作
     return new Promise((resolve) => {
-      this.props.appState.count = 4;
+      setTimeout(() => {
+        this.props.appState.count = 4;
+      }, 1000);
       resolve(true);
     });
   }
@@ -102,3 +107,5 @@ TopicList.propTypes = {
   topicStore: propTypes.objectOrObservableObject,
   history: PropTypes.object,
 };
+
+export default TopicList;

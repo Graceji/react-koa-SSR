@@ -11,6 +11,7 @@ const SheetsRegistry = require('react-jss').SheetsRegistry;
 
 // 获取state
 const getStoreState = (stores) => {
+  // 服务端渲染结束后, 得到数据默认值
   return Object.keys(stores).reduce((result, storeName) => {
     result[storeName] = stores[storeName].toJson();
     return result;
@@ -19,7 +20,7 @@ const getStoreState = (stores) => {
 
 module.exports = async (ctx, next, bundle, template) => {
   const routerContext = {};
-  const createStoreMap = bundle.createStoreMap
+  const createStoreMap = bundle.createStoreMap;
   const stores = createStoreMap();
   const sheetsRegistry = new SheetsRegistry();
   // Create a theme instance.
@@ -38,7 +39,7 @@ module.exports = async (ctx, next, bundle, template) => {
     ctx.url,
     sheetsRegistry,
     generateClassName,
-    theme
+    theme,
   );
 
   await bootstrapper(appTemplate)
@@ -58,6 +59,11 @@ module.exports = async (ctx, next, bundle, template) => {
       console.log('state', state);
 
       // 将数据插入到html中，完成client端数据的同步
+      /**
+       * 使用<%%-  %>语法
+       * webpack中的html-webpack-plugin插件编译ejs模板时，也是可以识别ejs语法的，所以在webpack编译时就将相应变量插入进去了
+       * 可以使用ejs的一个loader来处理<%%-  %>，将编译出来的结果变为<%-  %>，这样就仍为正确的ejs模板语法
+       */
       const html = ejs.render(template, {
         initialState: serialize(state),
         appString,

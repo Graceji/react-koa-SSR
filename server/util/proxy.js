@@ -2,24 +2,12 @@ const router = require('koa-router')();
 const querystring = require('querystring');
 const $http = require('./request');
 
-router.all('/:type/:subType?', async (ctx, next) => {
-  const path = ctx.path;
+const proxy = async (ctx) => {
   const user = ctx.session.user || {};
-  const { needAccessToken } = ctx.query;
-  if (needAccessToken && !user.accessToken) {
-    ctx.status = 401;
-    ctx.data = {
-      success: false,
-      msg: 'need login',
-    };
-  }
-
-  const query = Object.assign({}, ctx.query);
-  if (query.needAccessToken) delete query.needAccessToken;
   try {
-    const result = await $http(path, {
+    const result = await $http(ctx.path, {
       method: ctx.method,
-      params: query,
+      params: ctx.query,
       data: querystring.stringify(Object.assign({}, ctx.request.body, {
         accesstoken: user.accessToken
       })),
@@ -36,6 +24,8 @@ router.all('/:type/:subType?', async (ctx, next) => {
       };
     }
   }
-});
+}
+
+router.get('/topics', proxy);
 
 module.exports = router;

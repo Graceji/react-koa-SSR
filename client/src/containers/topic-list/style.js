@@ -7,7 +7,7 @@ export const topicPrimaryStyle = theme => ({
     color: '#555',
   },
   tab: {
-    backgroundColor: theme.palette.primary[500],
+    backgroundColor: theme.palette.primary.main,
     textAlign: 'center',
     display: 'inline-block',
     padding: '0 6px',
@@ -17,7 +17,7 @@ export const topicPrimaryStyle = theme => ({
     fontSize: '12px', // fontSize要手动写成px，默认计算为em
   },
   topTab: {
-    backgroundColor: theme.palette.secondary[500],
+    backgroundColor: theme.palette.secondary.main[500],
   },
 });
 
@@ -36,6 +36,6 @@ export const topicSecondaryStyle = theme => ({
     color: '#9e9e9e',
   },
   accentColor: {
-    color: theme.palette.secondary[300],
+    color: theme.palette.secondary.main[300],
   },
 });

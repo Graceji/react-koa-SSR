@@ -3,7 +3,6 @@ const querystring = require('querystring');
 const $http = require('./request');
 
 router.post('/login', async (ctx, next) => {
-  console.log('login');
   const { accessToken } = ctx.request.body;
   try {
     const result = await $http({

@@ -1,18 +1,13 @@
 'use strict'
 
-// const portfinder = require('portfinder');
 const merge = require('webpack-merge');
 const path = require('path');
-const webpack = require('webpack');
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const config = require('../config');
 const baseWebpackConfig = require('./webpack.base.conf');
 const utils = require('./utils');
 
-const HOST = process.env.HOST;
-const PORT = process.env.PORT && Number(process.env.PORT);
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+const serverWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
   target: 'node',
   entry: {
@@ -26,14 +21,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
     libraryTarget: 'commonjs2'
   },
+  // 去除依赖，不打包到生成的文件中
+  // 打包出来的代码是运行在node环境中的，这些类库是可以通过require()方式调用的
   externals: Object.keys(require('../package.json').dependencies),
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
   devtool: config.dev.devtool,
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-  ]
 });
 
-module.exports = devWebpackConfig;
+module.exports = serverWebpackConfig;
