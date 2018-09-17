@@ -111,7 +111,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new HtmlWebpackPlugin({
       filename: 'server.ejs',
-      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+      template: path.join(__dirname, '../client/server.template.ejs'),
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin

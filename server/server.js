@@ -35,7 +35,6 @@ app.use(session(config, app));
 
 router.use('/api/user', loginRouter.routes());
 router.use('/api/v1', proxy.routes());
-
 if (process.env.NODE_ENV === 'development') {
   const devStatic = require('./util/dev-static');
   devStatic(app, router);
