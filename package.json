@@ -34,7 +34,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "ejs": "^2.6.1",
-    "ejs-compiled-loader": "^2.2.0",
+    "ejs-compiled-loader": "^1.1.0",
     "jss": "^9.8.7",
     "jss-preset-default": "^4.5.0",
     "koa": "^2.5.3",

@@ -3,7 +3,6 @@ import {
   action
 } from 'mobx';
 
-// import axios from 'axios';
 import { post } from '../utils/http';
 
 export default class User {
@@ -19,5 +18,11 @@ export default class User {
       .then((res) => {
         console.log(res);
       });
+  }
+
+  toJson () {
+    return ({
+      user: this.user,
+    });
   }
 }

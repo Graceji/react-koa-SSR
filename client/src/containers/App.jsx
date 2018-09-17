@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import Routes from '../router';
-// import TopBar from './top-bar';
+import Routes from '../router';
+import TopBar from './top-bar';
 
 class App extends Component {
   constructor (props) {
@@ -10,13 +10,10 @@ class App extends Component {
 
   render () {
     return (
-      <div>
-        服务端渲染
-      </div>
-      // <React.Fragment>
-      //   <TopBar />
-      //   <Routes />
-      // </React.Fragment>
+      <React.Fragment>
+        <TopBar />
+        <Routes />
+      </React.Fragment>
     );
   }
 }

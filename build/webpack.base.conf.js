@@ -55,6 +55,7 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       },
+      { test: /\.ejs$/, loader: 'ejs-compiled-loader' },
     ],
   }
 }

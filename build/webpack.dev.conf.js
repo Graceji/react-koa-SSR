@@ -22,7 +22,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
   },
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true }),
   },
   devtool: config.dev.devtool,
   devServer: {
@@ -60,10 +60,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: path.join(__dirname, '../client/index.html'),
       inject: true
     }),
-    // new HtmlWebpackPlugin({
-    //   filename: 'server.ejs',
-    //   template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
-    // }),
+    new HtmlWebpackPlugin({
+      filename: 'server.ejs',
+      // template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+      template: path.join(__dirname, '../client/server.template.ejs'),
+    }),
   ]
 });
 

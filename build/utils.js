@@ -32,9 +32,7 @@ exports.cssLoaders = (options) => {
 
   const miniCssExtractPlugin = {
     loader: MiniCssExtractPlugin.loader,
-    options: {
-      publicPath: '../../'
-    }
+    options: {}
   }
 
   const generateLoaders = (loader, loaderOptions) => {

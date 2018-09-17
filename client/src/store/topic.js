@@ -88,6 +88,14 @@ class TopicStore {
         this.syncing = false;
       });
   }
+
+  toJson () {
+    return ({
+      topics: this.topics,
+      syncing: this.syncing,
+      details: this.details,
+    });
+  }
 }
 
 export default TopicStore;
